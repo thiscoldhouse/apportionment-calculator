@@ -17,7 +17,7 @@ git clone $reponame $localdeploy
 echo "Beaming code to the servers"
 
 echo "First, removing old code"
-ssh -t aleruiz@$server "sudo rm -rf /var/www/apportionmentcalculator.com/* "
+ssh -t aleruiz@$server "rm -rf /var/www/apportionmentcalculator.com/* "
 echo "Sending new code"
 scp -r /tmp/$localdeploy/* aleruiz@$server:/var/www/apportionmentcalculator.com
 echo "Cleaning up"
