@@ -1,7 +1,6 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <!-- <link href="lib/font.css" rel="stylesheet"> -->
     <link href="https://thiscold.house/lib/fontawesome.css" rel="stylesheet">
     <script src="https://thiscold.house/lib/jquery-3.3.1.js"></script>
     <link rel="stylesheet" type="text/css" href="https://thiscold.house/main.css">
@@ -533,7 +532,7 @@
           if (typeof(number) == "number"){
             return number
           }
-          var number = number.replace(/\,/g,'')
+          number = number.replace(/\,/g,'')
           number = parseInt(number)
           return number;
         };
@@ -570,7 +569,7 @@
             });
 
           for (i in sortedStates){
-            stateName = sortedStates[i]
+            let stateName = sortedStates[i]
             var rank = 'N/A'
             if (stateName in censusDict){
               rank = censusDict[stateName]['Rank']
@@ -623,32 +622,27 @@
         }
 
         // ------ actual math -----------
-
-        function pickHighestPriority(priorities){
-          var winningState = null;
-          var winner = 0
-          for (stateName in priorities){
-            if(priorities[stateName] > winner){
-              winningState = stateName
-              winner = priorities[stateName]
-            }
-          }
-          return winningState
-        }
-
         function updateResult(result, pops, i){
-          priority = {}
+          var priority = {};
+          var winningState = null;
+          var winningScore = 0
+
           for (stateName in result){
-            population = cleanNumber(pops[stateName]);
+            let population = cleanNumber(pops[stateName]);
             priority[stateName] = population / Math.sqrt(result[stateName] * (result[stateName] + 1))
+            if (priority[stateName] > winningScore){
+              winningState = stateName
+              winningScore = priority[stateName]
+            }
+
           }
-          result[pickHighestPriority(priority)] += 1
+          result[winningState] += 1
           return result
         }
 
         function calculateApportionment(){
           // first round, some initial setup
-          result = {}
+          var result = {}
           for (stateName in state.pops){
             result[stateName] = 1
           }
