@@ -640,6 +640,10 @@
             if(!newPop){
               newPop = 0
             }
+            let oldPop = state.pops[$(e.currentTarget).siblings()[1].innerHTML];
+            if (cleanNumber(oldPop) == cleanNumber(newPop)){
+              return;
+            }
             $(e.currentTarget).html(newPop);
             state.pops[$(e.currentTarget).siblings()[1].innerHTML] = newPop;
             update();
