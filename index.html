@@ -613,9 +613,8 @@
               let current = state.apportionment[stateName];
               change = current - previous;
             }
-
             let current = state.apportionment[stateName];
-            let previous = state.apportionment2020[stateName] || current;
+            let previous = state.apportionment2020[stateName] || 0;
             let changeSince2020 = current - previous;
 
             $('#table-body').append(
@@ -625,7 +624,6 @@
         };
 
         // ------ event handlers -------
-
         function attachTableHandlers(){
           $('.popDataEdit').on('keydown', function(e){
             if (e.key === 'Enter' || e.keyCode === 13) {
@@ -670,7 +668,12 @@
               alert("Please enter a unique state name");
               return;
             }
-            state.pops[stateName] = 0;
+
+            newPop = prompt('Enter population for ' + stateName);
+            let doc = new DOMParser().parseFromString(newPop, 'text/html');
+            newPop = doc.body.textContent || 0;
+            newPop = cleanNumber(newPop);
+            state.pops[stateName] = newPop;
             update();
           });
 
@@ -722,12 +725,16 @@
 
         // ------ initial render --------
 
+
         fillPopsInState('2020 Population');
         attachButtonHandlers();
-        update();
-
+        calculateApportionment();
         let apportionment2020 = state.apportionment;
         state.apportionment2020 = apportionment2020;
+        render();
+        attachTableHandlers();
+        update();
+
 
       });
       </script>
