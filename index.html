@@ -108,6 +108,7 @@
           <th>State</th>
           <th>Population (editable)</th>
           <th>Apportionment</th>
+          <th>Change</th>
         </tr>
       </thead>
       <tbody id="table-body">
@@ -522,8 +523,9 @@
           },
         ]
 
-        state = {
+        var state = {
           'pops': {},
+          'previousApportionment': {},
           'apportionment': {}
         };
 
@@ -552,20 +554,31 @@
           }
         };
 
-        function makeTableRow(rank, state, population, apportionment){
+        function makeTableRow(rank, state, population, apportionment, change){
+          let changeColor = 'black';
+          if (change > 0){
+            changeColor = 'green'
+          }
+          else if (change < 0){
+            changeColor = 'red'
+          }
+          change = '<span style="color:' + changeColor + '">' + change + '</span>';
           return $(
             "<tr><td>" + rank +
               '</td><td>' + state +
               "</td><td class='popDataEdit' contenteditable='true'>" +
               commaSeparateNumber(population) +
-              "</td><td>" + apportionment + "</tr>"
+              "</td><td>" + apportionment +
+              "</td><td>" + change +
+              "</tr>"
           )
         };
 
         function render(){
           $('#table-body').empty();
 
-          censusDict ={}
+          // this should probably be moved to not be calculated everytime
+          censusDict = {};
           for (i in census){
             censusDict[census[i]['State']] = census[i];
           }
@@ -573,17 +586,26 @@
           var sortedStates = Object.keys(state.pops);
           sortedStates.sort(
             function(state1, state2){
-              return state.pops[state1] < state.pops[state2] && 1 || -1
+              return state.pops[state1] < state.pops[state2] && 1 || -1;
             });
 
           for (i in sortedStates){
-            let stateName = sortedStates[i]
-            var rank = 'N/A'
+            let stateName = sortedStates[i];
+            var rank = 'N/A';
             if (stateName in censusDict){
-              rank = censusDict[stateName]['Rank']
+              rank = censusDict[stateName]['Rank'];
             }
+
+            change = 'N/A';
+            // this block avoids the initial pass
+            if (!$.isEmptyObject(state.previousApportionment)){
+              let previous = state.previousApportionment[stateName] || 0;
+              let current = state.apportionment[stateName];
+              change = current - previous;
+            }
+
             $('#table-body').append(
-              makeTableRow(rank, stateName, state.pops[stateName], state.apportionment[stateName])
+              makeTableRow(rank, stateName, state.pops[stateName], state.apportionment[stateName], change)
             )
           }
         };
@@ -659,6 +681,8 @@
           for (i=0; i<385; i++){
             result = updateResult(result, state.pops, i)
           }
+          var previous = state.apportionment;
+          state.previousApportionment = previous;
           state.apportionment = result;
           return result
         }
