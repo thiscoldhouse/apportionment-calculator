@@ -1,0 +1,682 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <!-- <link href="lib/font.css" rel="stylesheet"> -->
+    <link href="https://thiscold.house/lib/fontawesome.css" rel="stylesheet">
+    <script src="https://thiscold.house/lib/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://thiscold.house/main.css">
+    <title>Congressional Apportionment Calculator
+    </title>
+  </head>
+  <body>
+
+
+    <style>
+      /* results table */
+      .main-table {
+          margin-left: auto;
+          margin-right: auto;
+          border-collapse: collapse;
+          min-width: 90%;
+          font-family: sans-serif;
+      }
+      .main-table thead tr {
+          background-color: #333333;
+          color: #ffffff;
+          text-align: left;
+      }
+      .main-table th,
+      .main-table td {
+          padding: 12px 15px;
+      }
+      .main-table tbody tr {
+          border-bottom: 1px solid #dddddd;
+      }
+
+      .main-table tbody tr:nth-of-type(even) {
+          background-color: #f3f3f3;
+      }
+
+      .main-table tbody tr.active-row {
+          font-weight: bold;
+          color: #009879;
+      }
+
+      .popDataEdit:hover {
+          cursor: pointer;
+      }
+
+      .reset-buttons button {
+          background-color: #333333;
+          border: 1px solid n;
+          color: white;
+          padding: 10px 20px;
+          cursor: pointer;
+          float: left;
+      }
+
+      #add-row{
+          float: right;
+      }
+
+      /* buttons */
+      .reset-buttons button:not(:last-child) {
+          border-right: none;
+      }
+
+      .reset-buttons{
+          white-space:normal;
+          width: 90%;
+          content: "";
+          display: block;
+          margin: auto;
+          float: left;
+          margin-left: 5%;
+      }
+
+      .reset-buttons button:hover {
+          background-color: #222222;
+      }
+
+    </style>
+    <br>
+    <div class="blog-entry">
+      <h2>Calculating Congressional Apportionment</h2>
+      <p>A simple, web based implementation of <a href="https://en.wikipedia.org/wiki/United_States_congressional_apportionment#The_method_of_equal_proportions">the algorithm used for congressional apportionment</a>. If you want something a little more digestible and filled with lots of good information, the fantastic podcast <a href="https://openargs.com">Opening Arguments</a> did an <a href="https://openargs.com/oa486-apportionment-might-not-be-final/">episode</a> on apportionment, which inspired me to make this widget</p>
+      <p>So have some fun, play around with changing the populations, or add new states. The code is open source and can be viewed on <a href="https://github.com/thiscoldhouse/apportionment-calculator">my github.</a></p>
+    <p>Originally made for my <a href="https://thiscold.house">blog</a>, since moved to its own domain.</p>
+    </div>
+    <br>
+
+    <div class="reset-buttons">
+      <button id="2020-reset">Reset table to 2020 census results</button>
+      <button id="2010-reset">Reset table to 2010 census results</button>
+      <button id="add-row">Add state</button>
+
+    </div>
+
+    <br>
+    <table class="main-table">
+      <thead>
+        <tr>
+          <th>2020 Rank</th>
+          <th>State</th>
+          <th>Population (editable)</th>
+          <th>Apportionment</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+      </tbody>
+    </table>
+    <br><br>
+
+    <script>
+      $(document).ready(function(){
+
+        // pulled from wikipedia
+        var census = [
+          {
+            "Rank": 1,
+            "State": "California",
+            "2010 Population": "37,253,956",
+            "2020 Population": "39,538,223",
+            "Change": "2,284,267",
+            "Percentchange": "6.13%"
+          },
+          {
+            "Rank": 2,
+            "State": "Texas",
+            "2010 Population": "25,145,561",
+            "2020 Population": "29,145,505",
+            "Change": "3,999,944",
+            "Percentchange": "15.91%"
+          },
+          {
+            "Rank": 3,
+            "State": "Florida",
+            "2010 Population": "18,801,310",
+            "2020 Population": "21,538,187",
+            "Change": "2,736,877",
+            "Percentchange": "14.56%"
+          },
+          {
+            "Rank": 4,
+            "State": "New York",
+            "2010 Population": "19,378,102",
+            "2020 Population": "20,201,249",
+            "Change": "823,147",
+            "Percentchange": "4.25%"
+          },
+          {
+            "Rank": 5,
+            "State": "Pennsylvania",
+            "2010 Population": "12,702,379",
+            "2020 Population": "13,002,700",
+            "Change": "300,321",
+            "Percentchange": "2.36%"
+          },
+          {
+            "Rank": 6,
+            "State": "Illinois",
+            "2010 Population": "12,830,632",
+            "2020 Population": "12,812,508",
+            "Change": "–18,124",
+            "Percentchange": "–0.14%"
+          },
+          {
+            "Rank": 7,
+            "State": "Ohio",
+            "2010 Population": "11,536,504",
+            "2020 Population": "11,799,448",
+            "Change": "262,944",
+            "Percentchange": "2.28%"
+          },
+          {
+            "Rank": 8,
+            "State": "Georgia",
+            "2010 Population": "9,687,653",
+            "2020 Population": "10,711,908",
+            "Change": "1,024,255",
+            "Percentchange": "10.57%"
+          },
+          {
+            "Rank": 9,
+            "State": "North Carolina",
+            "2010 Population": "9,535,483",
+            "2020 Population": "10,439,388",
+            "Change": "903,905",
+            "Percentchange": "9.48%"
+          },
+          {
+            "Rank": 10,
+            "State": "Michigan",
+            "2010 Population": "9,883,640",
+            "2020 Population": "10,077,331",
+            "Change": "193,691",
+            "Percentchange": "1.96%"
+          },
+          {
+            "Rank": 11,
+            "State": "New Jersey",
+            "2010 Population": "8,791,894",
+            "2020 Population": "9,288,994",
+            "Change": "497,100",
+            "Percentchange": "5.65%"
+          },
+          {
+            "Rank": 12,
+            "State": "Virginia",
+            "2010 Population": "8,001,024",
+            "2020 Population": "8,631,393",
+            "Change": "630,369",
+            "Percentchange": "7.88%"
+          },
+          {
+            "Rank": 13,
+            "State": "Washington",
+            "2010 Population": "6,724,540",
+            "2020 Population": "7,705,281",
+            "Change": "980,741",
+            "Percentchange": "14.58%"
+          },
+          {
+            "Rank": 14,
+            "State": "Arizona",
+            "2010 Population": "6,392,017",
+            "2020 Population": "7,151,502",
+            "Change": "759,485",
+            "Percentchange": "11.88%"
+          },
+          {
+            "Rank": 15,
+            "State": "Massachusetts",
+            "2010 Population": "6,547,629",
+            "2020 Population": "7,029,917",
+            "Change": "482,288",
+            "Percentchange": "7.37%"
+          },
+          {
+            "Rank": 16,
+            "State": "Tennessee",
+            "2010 Population": "6,346,105",
+            "2020 Population": "6,910,840",
+            "Change": "564,735",
+            "Percentchange": "8.90%"
+          },
+          {
+            "Rank": 17,
+            "State": "Indiana",
+            "2010 Population": "6,483,802",
+            "2020 Population": "6,785,528",
+            "Change": "301,726",
+            "Percentchange": "4.65%"
+          },
+          {
+            "Rank": 18,
+            "State": "Maryland",
+            "2010 Population": "5,773,552",
+            "2020 Population": "6,177,224",
+            "Change": "403,672",
+            "Percentchange": "6.99%"
+          },
+          {
+            "Rank": 19,
+            "State": "Missouri",
+            "2010 Population": "5,988,927",
+            "2020 Population": "6,154,913",
+            "Change": "165,986",
+            "Percentchange": "2.77%"
+          },
+          {
+            "Rank": 20,
+            "State": "Wisconsin",
+            "2010 Population": "5,686,986",
+            "2020 Population": "5,893,718",
+            "Change": "206,732",
+            "Percentchange": "3.64%"
+          },
+          {
+            "Rank": 21,
+            "State": "Colorado",
+            "2010 Population": "5,029,196",
+            "2020 Population": "5,773,714",
+            "Change": "744,518",
+            "Percentchange": "14.80%"
+          },
+          {
+            "Rank": 22,
+            "State": "Minnesota",
+            "2010 Population": "5,303,925",
+            "2020 Population": "5,706,494",
+            "Change": "402,569",
+            "Percentchange": "7.59%"
+          },
+          {
+            "Rank": 23,
+            "State": "South Carolina",
+            "2010 Population": "4,625,364",
+            "2020 Population": "5,118,425",
+            "Change": "493,061",
+            "Percentchange": "10.66%"
+          },
+          {
+            "Rank": 24,
+            "State": "Alabama",
+            "2010 Population": "4,779,736",
+            "2020 Population": "5,024,279",
+            "Change": "244,543",
+            "Percentchange": "5.12%"
+          },
+          {
+            "Rank": 25,
+            "State": "Louisiana",
+            "2010 Population": "4,533,372",
+            "2020 Population": "4,657,757",
+            "Change": "124,385",
+            "Percentchange": "2.74%"
+          },
+          {
+            "Rank": 26,
+            "State": "Kentucky",
+            "2010 Population": "4,339,367",
+            "2020 Population": "4,505,836",
+            "Change": "166,469",
+            "Percentchange": "3.84%"
+          },
+          {
+            "Rank": 27,
+            "State": "Oregon",
+            "2010 Population": "3,831,074",
+            "2020 Population": "4,237,256",
+            "Change": "406,182",
+            "Percentchange": "10.60%"
+          },
+          {
+            "Rank": 28,
+            "State": "Oklahoma",
+            "2010 Population": "3,751,351",
+            "2020 Population": "3,959,353",
+            "Change": "208,002",
+            "Percentchange": "5.54%"
+          },
+          {
+            "Rank": 29,
+            "State": "Connecticut",
+            "2010 Population": "3,574,097",
+            "2020 Population": "3,605,944",
+            "Change": "31,847",
+            "Percentchange": "0.89%"
+          },
+          {
+            "Rank": 30,
+            "State": "Utah",
+            "2010 Population": "2,763,885",
+            "2020 Population": "3,271,616",
+            "Change": "507,731",
+            "Percentchange": "18.37%"
+          },
+          {
+            "Rank": 31,
+            "State": "Iowa",
+            "2010 Population": "3,046,355",
+            "2020 Population": "3,190,369",
+            "Change": "144,014",
+            "Percentchange": "4.73%"
+          },
+          {
+            "Rank": 32,
+            "State": "Nevada",
+            "2010 Population": "2,700,551",
+            "2020 Population": "3,104,614",
+            "Change": "404,063",
+            "Percentchange": "14.96%"
+          },
+          {
+            "Rank": 33,
+            "State": "Arkansas",
+            "2010 Population": "2,915,918",
+            "2020 Population": "3,011,524",
+            "Change": "95,606",
+            "Percentchange": "3.28%"
+          },
+          {
+            "Rank": 34,
+            "State": "Mississippi",
+            "2010 Population": "2,967,297",
+            "2020 Population": "2,961,279",
+            "Change": "–6,018",
+            "Percentchange": "–0.20%"
+          },
+          {
+            "Rank": 35,
+            "State": "Kansas",
+            "2010 Population": "2,853,118",
+            "2020 Population": "2,937,880",
+            "Change": "84,762",
+            "Percentchange": "2.97%"
+          },
+          {
+            "Rank": 36,
+            "State": "New Mexico",
+            "2010 Population": "2,059,179",
+            "2020 Population": "2,117,522",
+            "Change": "58,343",
+            "Percentchange": "2.83%"
+          },
+          {
+            "Rank": 37,
+            "State": "Nebraska",
+            "2010 Population": "1,826,341",
+            "2020 Population": "1,961,504",
+            "Change": "135,163",
+            "Percentchange": "7.40%"
+          },
+          {
+            "Rank": 38,
+            "State": "Idaho",
+            "2010 Population": "1,567,582",
+            "2020 Population": "1,839,106",
+            "Change": "271,524",
+            "Percentchange": "17.32%"
+          },
+          {
+            "Rank": 39,
+            "State": "West Virginia",
+            "2010 Population": "1,852,994",
+            "2020 Population": "1,793,716",
+            "Change": "–59,278",
+            "Percentchange": "–3.20%"
+          },
+          {
+            "Rank": 40,
+            "State": "Hawaii",
+            "2010 Population": "1,360,301",
+            "2020 Population": "1,455,271",
+            "Change": "94,970",
+            "Percentchange": "6.98%"
+          },
+          {
+            "Rank": 41,
+            "State": "New Hampshire",
+            "2010 Population": "1,316,470",
+            "2020 Population": "1,377,529",
+            "Change": "61,059",
+            "Percentchange": "4.64%"
+          },
+          {
+            "Rank": 42,
+            "State": "Maine",
+            "2010 Population": "1,328,361",
+            "2020 Population": "1,362,359",
+            "Change": "33,998",
+            "Percentchange": "2.56%"
+          },
+          {
+            "Rank": 43,
+            "State": "Rhode Island",
+            "2010 Population": "1,052,567",
+            "2020 Population": "1,097,379",
+            "Change": "44,812",
+            "Percentchange": "4.26%"
+          },
+          {
+            "Rank": 44,
+            "State": "Montana",
+            "2010 Population": "989,415",
+            "2020 Population": "1,084,225",
+            "Change": "94,810",
+            "Percentchange": "9.58%"
+          },
+          {
+            "Rank": 45,
+            "State": "Delaware",
+            "2010 Population": "897,934",
+            "2020 Population": "989,948",
+            "Change": "92,014",
+            "Percentchange": "10.25%"
+          },
+          {
+            "Rank": 46,
+            "State": "South Dakota",
+            "2010 Population": "814,180",
+            "2020 Population": "886,667",
+            "Change": "72,487",
+            "Percentchange": "8.90%"
+          },
+          {
+            "Rank": 47,
+            "State": "North Dakota",
+            "2010 Population": "672,591",
+            "2020 Population": "779,094",
+            "Change": "106,503",
+            "Percentchange": "15.83%"
+          },
+          {
+            "Rank": 48,
+            "State": "Alaska",
+            "2010 Population": "710,231",
+            "2020 Population": "733,391",
+            "Change": "23,160",
+            "Percentchange": "3.26%"
+          },
+          {
+            "Rank": 49,
+            "State": "Vermont",
+            "2010 Population": "625,741",
+            "2020 Population": "643,077",
+            "Change": "17,336",
+            "Percentchange": "2.77%"
+          },
+          {
+            "Rank": 50,
+            "State": "Wyoming",
+            "2010 Population": "563,626",
+            "2020 Population": "576,851",
+            "Change": "13,225",
+            "Percentchange": "2.35%"
+          },
+        ]
+
+        state = {
+          'pops': {},
+          'apportionment': {}
+        };
+
+        // ------ rendering stuff---------
+        function commaSeparateNumber(val){
+          // taken from  https://stackoverflow.com/questions/3883342/add-commas-to-a-number-in-jquery
+          while (/(\d+)(\d{3})/.test(val.toString())){
+            val = val.toString().replace(/(\d+)(\d{3})/, '$1'+','+'$2');
+          }
+          return val;
+        }
+
+        function cleanNumber(number){
+          if (typeof(number) == "number"){
+            return number
+          }
+          var number = number.replace(/\,/g,'')
+          number = parseInt(number)
+          return number;
+        };
+
+        function fillPopsInState(censusKey){
+          state.pops = {}; // clear old data
+          for(i in census){
+            state.pops[census[i]['State']] = cleanNumber(census[i][censusKey]);
+          }
+        };
+
+        function makeTableRow(rank, state, population, apportionment){
+          return $(
+            "<tr><td>" + rank +
+              '</td><td>' + state +
+              "</td><td class='popDataEdit' contenteditable='true'>" +
+              commaSeparateNumber(population) +
+              "</td><td>" + apportionment + "</tr>"
+          )
+        };
+
+        function render(){
+          $('#table-body').empty();
+
+          censusDict ={}
+          for (i in census){
+            censusDict[census[i]['State']] = census[i];
+          }
+
+          var sortedStates = Object.keys(state.pops);
+          sortedStates.sort(
+            function(state1, state2){
+              return state.pops[state1] < state.pops[state2] && 1 || -1
+            });
+
+          for (i in sortedStates){
+            stateName = sortedStates[i]
+            var rank = 'N/A'
+            if (stateName in censusDict){
+              rank = censusDict[stateName]['Rank']
+            }
+            $('#table-body').append(
+              makeTableRow(rank, stateName, state.pops[stateName], state.apportionment[stateName])
+            )
+          }
+        };
+
+        // ------ event handlers -------
+
+        function attachTableHandlers(){
+          $('.popDataEdit').on('keydown', function(e){
+            if (e.key === 'Enter' || e.keyCode === 13) {
+              e.preventDefault();
+              $(e.currentTarget).blur();
+            }
+          });
+
+          $('.popDataEdit').on('blur', function(e){
+            var newPop = e.currentTarget.innerHTML;
+            newPop = cleanNumber(newPop);
+            if(!newPop){
+              newPop = 0
+            }
+            $(e.currentTarget).html(newPop);
+            state.pops[$(e.currentTarget).siblings()[1].innerHTML] = newPop;
+            update();
+          });
+        }
+
+        function attachButtonHandlers(){
+          $('#2020-reset').on('click', function(){
+            fillPopsInState('2020 Population');
+            update();
+          });
+
+          $('#2010-reset').on('click', function(){
+            fillPopsInState('2010 Population');
+            update();
+          });
+
+          $('#add-row').on('click', function(){
+            stateName = prompt('Enter state name');
+            state.pops[stateName] = 0;
+            update();
+          });
+
+        }
+
+        // ------ actual math -----------
+
+        function pickHighestPriority(priorities){
+          var winningState = null;
+          var winner = 0
+          for (stateName in priorities){
+            if(priorities[stateName] > winner){
+              winningState = stateName
+              winner = priorities[stateName]
+            }
+          }
+          return winningState
+        }
+
+        function updateResult(result, pops, i){
+          priority = {}
+          for (stateName in result){
+            population = cleanNumber(pops[stateName]);
+            priority[stateName] = population / Math.sqrt(result[stateName] * (result[stateName] + 1))
+          }
+          result[pickHighestPriority(priority)] += 1
+          return result
+        }
+
+        function calculateApportionment(){
+          // first round, some initial setup
+          result = {}
+          for (stateName in state.pops){
+            result[stateName] = 1
+          }
+          for (i=0; i<=385; i++){
+            result = updateResult(result, state.pops, i)
+          }
+          state.apportionment = result;
+          return result
+        }
+
+        // ------ main page controller --
+
+        function update(){
+          calculateApportionment();
+          render();
+          attachTableHandlers();
+        }
+
+        // ------ initial render --------
+
+        fillPopsInState('2020 Population');
+        attachButtonHandlers();
+        update();
+
+
+      });
+      </script>
+  </body>
+</html>
