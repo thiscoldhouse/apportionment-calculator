@@ -9,8 +9,6 @@
     </title>
   </head>
   <body>
-
-
     <style>
       /* results table */
       .main-table {
@@ -654,7 +652,7 @@
           for (stateName in state.pops){
             result[stateName] = 1
           }
-          for (i=0; i<=385; i++){
+          for (i=0; i<385; i++){
             result = updateResult(result, state.pops, i)
           }
           state.apportionment = result;
