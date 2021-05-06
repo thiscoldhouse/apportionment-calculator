@@ -595,7 +595,6 @@
             if (stateName in censusDict){
               rank = censusDict[stateName]['Rank'];
             }
-
             change = 'N/A';
             // this block avoids the initial pass
             if (!$.isEmptyObject(state.previousApportionment)){
@@ -647,6 +646,15 @@
 
           $('#add-row').on('click', function(){
             stateName = prompt('Enter state name');
+            if (!stateName){
+              alert("Can't enter an empty state name");
+              return;
+            }
+            stateName = stateName.charAt(0).toUpperCase() + stateName.slice(1);
+            if (stateName in state.pops){
+              alert("Please enter a unique state name");
+              return;
+            }
             state.pops[stateName] = 0;
             update();
           });
@@ -678,10 +686,12 @@
           for (stateName in state.pops){
             result[stateName] = 1
           }
-          for (i=0; i<385; i++){
+          let leftoverSeats = 435 - Object.keys(state.pops).length;
+          console.log(leftoverSeats);
+          for (i=0; i<leftoverSeats; i++){
             result = updateResult(result, state.pops, i)
           }
-          var previous = state.apportionment;
+          let previous = state.apportionment;
           state.previousApportionment = previous;
           state.apportionment = result;
           return result
