@@ -108,7 +108,8 @@
           <th>State</th>
           <th>Population (editable)</th>
           <th>Apportionment</th>
-          <th>Change</th>
+          <th>Change From Last Edit</th>
+          <th>Change From 2020 Census</th>
         </tr>
       </thead>
       <tbody id="table-body">
@@ -526,6 +527,7 @@
         var state = {
           'pops': {},
           'previousApportionment': {},
+          'apportionment2020': {},
           'apportionment': {}
         };
 
@@ -554,8 +556,8 @@
           }
         };
 
-        function makeTableRow(rank, state, population, apportionment, change){
-          let changeColor = 'black';
+        function makeTableRow(rank, state, population, apportionment, change, changeSince2020){
+          var changeColor = 'black';
           if (change > 0){
             changeColor = 'green'
           }
@@ -563,6 +565,15 @@
             changeColor = 'red'
           }
           change = '<span style="color:' + changeColor + '">' + change + '</span>';
+
+          changeColor = 'black';
+          if (changeSince2020 > 0){
+            changeColor = 'green'
+          }
+          else if (changeSince2020 < 0){
+            changeColor = 'red'
+          }
+          changeSince2020 = '<span style="color:' + changeColor + '">' + changeSince2020 + '</span>';
           return $(
             "<tr><td>" + rank +
               '</td><td>' + state +
@@ -570,6 +581,7 @@
               commaSeparateNumber(population) +
               "</td><td>" + apportionment +
               "</td><td>" + change +
+              "</td><td>" + changeSince2020 +
               "</tr>"
           )
         };
@@ -596,15 +608,18 @@
               rank = censusDict[stateName]['Rank'];
             }
             change = 'N/A';
-            // this block avoids the initial pass
             if (!$.isEmptyObject(state.previousApportionment)){
               let previous = state.previousApportionment[stateName] || 0;
               let current = state.apportionment[stateName];
               change = current - previous;
             }
 
+            let current = state.apportionment[stateName];
+            let previous = state.apportionment2020[stateName] || current;
+            let changeSince2020 = current - previous;
+
             $('#table-body').append(
-              makeTableRow(rank, stateName, state.pops[stateName], state.apportionment[stateName], change)
+              makeTableRow(rank, stateName, state.pops[stateName], state.apportionment[stateName], change, changeSince2020)
             )
           }
         };
@@ -711,6 +726,8 @@
         attachButtonHandlers();
         update();
 
+        let apportionment2020 = state.apportionment;
+        state.apportionment2020 = apportionment2020;
 
       });
       </script>
