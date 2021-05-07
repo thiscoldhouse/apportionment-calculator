@@ -55,6 +55,9 @@
       #add-row{
           float: right;
       }
+      #undo{
+          float: right;
+      }
 
       /* buttons */
       .reset-buttons button:not(:last-child) {
@@ -74,6 +77,14 @@
       .reset-buttons button:hover {
           background-color: #222222;
       }
+
+      .edit-icon {
+          display: inline-block;
+      }
+      .edit-icon:hover {
+          cursor: pointer;
+      }
+
 
     </style>
     <br>
@@ -96,7 +107,9 @@
     <div class="reset-buttons">
       <button id="2020-reset">Reset table to 2020 census results</button>
       <button id="2010-reset">Reset table to 2010 census results</button>
+      <button id="undo" style="display:none">Undo</button>
       <button id="add-row">Add state</button>
+
 
     </div>
 
@@ -110,6 +123,7 @@
           <th>Apportionment</th>
           <th>Change From Last Edit</th>
           <th>Change From 2020 Census</th>
+          <th></th>
         </tr>
       </thead>
       <tbody id="table-body">
@@ -120,6 +134,7 @@
     <script>
       $(document).ready(function(){
 
+        // ---------- data ------------ //
         // pulled from wikipedia
         var census = [
           {
@@ -523,6 +538,7 @@
             "Percentchange": "2.35%"
           },
         ]
+        // ---- end data ---- //
 
         var state = {
           'pops': {},
@@ -531,7 +547,12 @@
           'apportionment': {}
         };
 
-        // ------ rendering stuff---------
+
+        // -------- util --------- //
+        function copyObject(obj){
+          return $.extend({}, obj);
+        }
+
         function commaSeparateNumber(val){
           // taken from  https://stackoverflow.com/questions/3883342/add-commas-to-a-number-in-jquery
           while (/(\d+)(\d{3})/.test(val.toString())){
@@ -550,12 +571,14 @@
         };
 
         function fillPopsInState(censusKey){
-          state.pops = {}; // clear old data
+          var statePops = {};
           for(i in census){
-            state.pops[census[i]['State']] = cleanNumber(census[i][censusKey]);
+            statePops[census[i]['State']] = cleanNumber(census[i][censusKey]);
           }
+          updateState('pops', statePops);
         };
 
+        // ------ rendering stuff-------- //-
         function makeTableRow(rank, state, population, apportionment, change, changeSince2020){
           var changeColor = 'black';
           if (change > 0){
@@ -575,14 +598,17 @@
           }
           changeSince2020 = '<span style="color:' + changeColor + '">' + changeSince2020 + '</span>';
           return $(
-            "<tr><td>" + rank +
+            '<tr id="' + state + '-row"><td>' + rank +
               '</td><td>' + state +
-              "</td><td class='popDataEdit' contenteditable='true'>" +
+              "</td><td id='" + state + "-pop' class='popDataEdit' contenteditable='true'>" +
               commaSeparateNumber(population) +
               "</td><td>" + apportionment +
               "</td><td>" + change +
               "</td><td>" + changeSince2020 +
-              "</tr>"
+              "</td><td>" +
+                "<div class='edit-icon' id='edit-" + state + "pop'>&#x270F;&nbsp&nbsp;&nbsp&nbsp;&nbsp&nbsp</div>" +
+                "<div class='edit-icon' id='delete-" + state + "'>&#x1F5D1;</div>" +
+              "</td></tr>"
           )
         };
 
@@ -623,8 +649,25 @@
           }
         };
 
-        // ------ event handlers -------
+        // ------ event handlers ----- //
         function attachTableHandlers(){
+          $('.edit-icon').on('click', function(e){
+            if ($(e.currentTarget).attr('id').includes('edit')){
+              console.log('here');
+              $(e.currentTarget).parent().siblings('.popDataEdit').trigger('focus');
+            }
+            else if ($(e.currentTarget).attr('id').includes('delete')){
+              let stateName = $(e.currentTarget).attr('id').split('-')[1];
+              statePops = copyObject(state.pops);
+              delete statePops[stateName];
+              updateState('pops', statePops);
+              update();
+            }
+            else {
+              console.log('Something has gone wrong');
+            }
+          });
+
           $('.popDataEdit').on('keydown', function(e){
             if (e.key === 'Enter' || e.keyCode === 13) {
               e.preventDefault();
@@ -645,7 +688,9 @@
               return;
             }
             $(e.currentTarget).html(newPop);
-            state.pops[$(e.currentTarget).siblings()[1].innerHTML] = newPop;
+            let statePops = copyObject(state.pops);
+            statePops[$(e.currentTarget).siblings()[1].innerHTML] = newPop;
+            updateState('pops', statePops);
             update();
           });
         }
@@ -658,6 +703,12 @@
 
           $('#2010-reset').on('click', function(){
             fillPopsInState('2010 Population');
+            update();
+          });
+
+          $('#undo').on('click', function(){
+            state.pops = copyObject(state.previouspops);
+            state.previouspops = null;
             update();
           });
 
@@ -677,13 +728,15 @@
             let doc = new DOMParser().parseFromString(newPop, 'text/html');
             newPop = doc.body.textContent || 0;
             newPop = cleanNumber(newPop);
-            state.pops[stateName] = newPop;
+            let statePops = copyObject(state.pops);
+            statePops[stateName] = newPop;
+            updateState('pops', statePops);
             update();
           });
 
         }
 
-        // ------ actual math -----------
+        // ------ actual math --------- //
         function updateResult(result, pops, i){
           var priority = {};
           var winningState = null;
@@ -713,33 +766,46 @@
           for (i=0; i<leftoverSeats; i++){
             result = updateResult(result, state.pops, i)
           }
-          let previous = state.apportionment;
-          state.previousApportionment = previous;
+          state.previousApportionment = copyObject(state.apportionment);
           state.apportionment = result;
           return result
         }
 
-        // ------ main page controller --
+        // ------ main page controller and helpers -- //
+        function addUndoIfAppropriate(){
+          if (state.previouspops) {
+            $('#undo').css('display', 'block');
+          }
+          else {
+            $('#undo').css('display', 'none');
+          }
+        }
+
+        function updateState(k, v){
+          state['previous' + k] = copyObject(state[k]);
+          state[k] = v;
+        }
 
         function update(){
           calculateApportionment();
           render();
           attachTableHandlers();
+          addUndoIfAppropriate();
         }
 
-        // ------ initial render --------
+        // ------ initial render -------- //
 
-
+        // initial data
         fillPopsInState('2020 Population');
-        attachButtonHandlers();
         calculateApportionment();
         let apportionment2020 = state.apportionment;
         state.apportionment2020 = apportionment2020;
+        state.previouspops = undefined;  // no undo button at first
+
+        // initial render
         render();
+        attachButtonHandlers();
         attachTableHandlers();
-        update();
-
-
       });
       </script>
   </body>
