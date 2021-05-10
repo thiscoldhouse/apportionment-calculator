@@ -14,8 +14,9 @@
           margin-left: auto;
           margin-right: auto;
           border-collapse: collapse;
-          min-width: 90%;
+          width: 90%;
           font-family: sans-serif;
+          overflow-x: scroll;
       }
       .main-table thead tr {
           background-color: #333333;
@@ -65,6 +66,7 @@
       }
 
       .reset-buttons{
+
           white-space:normal;
           width: 90%;
           content: "";
@@ -415,7 +417,6 @@
         }
 
         function cleanNumber(number){
-          debugger;
           if (typeof(number) == "number"){
             return number
           }
@@ -425,7 +426,6 @@
         };
 
         function fillPopsInState(censusKey){
-          debugger;
           var statePops = {};
           for(i in census){
             statePops[census[i]['State']] = cleanNumber(census[i][censusKey]);
@@ -598,7 +598,6 @@
           var winningScore = 0
 
           for (stateName in result){
-            debugger;
             let population = cleanNumber(pops[stateName]);
             priority[stateName] = population / Math.sqrt(result[stateName] * (result[stateName] + 1))
             if (priority[stateName] > winningScore){
