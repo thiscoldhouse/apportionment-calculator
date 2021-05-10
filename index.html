@@ -44,13 +44,14 @@
           cursor: pointer;
       }
 
-      .reset-buttons button {
+      .table-edit-buttons button {
           background-color: #333333;
           border: 1px solid n;
           color: white;
           padding: 10px 20px;
           cursor: pointer;
           float: left;
+          font-size: 18px;
       }
 
       #add-row{
@@ -61,12 +62,12 @@
       }
 
       /* buttons */
-      .reset-buttons button:not(:last-child) {
+      .table-edit-buttons button:not(:last-child) {
           border-right: none;
       }
 
-      .reset-buttons{
-
+      .table-edit-buttons{
+          padding-bottom:5px;
           white-space:normal;
           width: 90%;
           content: "";
@@ -76,11 +77,12 @@
           margin-left: 5%;
       }
 
-      .reset-buttons button:hover {
+      .table-edit-buttons button:hover {
           background-color: #222222;
       }
 
       .edit-icon {
+          padding:10px;
           display: inline-block;
       }
       .edit-icon:hover {
@@ -109,7 +111,7 @@
     </div>
     <br>
 
-    <div class="reset-buttons">
+    <div class="table-edit-buttons">
       <button id="2020-reset">Reset table to 2020 census results</button>
       <button id="2010-reset">Reset table to 2010 census results</button>
       <button id="undo" style="display:none">Undo</button>
