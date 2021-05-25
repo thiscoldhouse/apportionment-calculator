@@ -89,11 +89,25 @@
           cursor: pointer;
       }
 
+      #loading{
+          position: fixed;
+          height: 100%;
+          width: 100%;
+          overflow: hidden;
+          top: 0;
+          left: 0;
+          text-align: center;
+          background: gray;
+          opacity: .9;
+          font-size: 35px;
+          line-height: 10;
+          display: none;
+      }
+
 
     </style>
     <br>
     <div class="blog-entry">
-
       <a href="https://interstitial.coop" target="_blank" style="text-decoration:none; color: black;">
         <div style="align: left; text-align:center; font-size:10;">
           <img src="/interstitial.png" width="30px"/>
@@ -116,8 +130,7 @@
       <button id="2010-reset">Reset table to 2010 census results</button>
       <button id="undo" style="display:none">Undo</button>
       <button id="add-row">Add state</button>
-
-
+      <button id="change-total-seats">Change Total Seats</button>
     </div>
 
     <br>
@@ -398,6 +411,7 @@
         // ---- end data ---- //
 
         var state = {
+          'repCount': 435,
           'pops': {},
           'previousApportionment': {},
           'apportionment2020': {},
@@ -469,9 +483,9 @@
           )
         };
 
-        function render(){
+        function renderTable(){
+          $('#change-total-seats').html('Change seats from ' + state.repCount);
           $('#table-body').empty();
-
           // this should probably be moved to not be calculated everytime
           censusDict = {};
           for (i in census){
@@ -564,8 +578,25 @@
           });
 
           $('#undo').on('click', function(){
-            state.pops = copyObject(state.previouspops);
-            state.previouspops = null;
+            undoAction = state.undoAction;
+            for (k in undoAction){
+              state[k] = state.undoAction[k];
+            }
+            state.undoAction = null;
+            update();
+          });
+
+          $('#change-total-seats').on('click', function(){
+            newCount = prompt('Enter the new number of reps. Current number: ' + state.repCount);
+            newCount = cleanNumber(newCount);
+            if (!newCount){
+              alert("Please enter a valid number");
+              return;
+            }
+            else if (newCount > 99999){
+              alert("That's a big number, it might take a little while! Please be patient");
+            }
+            updateState('repCount', newCount);
             update();
           });
 
@@ -618,8 +649,7 @@
           for (stateName in state.pops){
             result[stateName] = 1
           }
-          let leftoverSeats = 435 - Object.keys(state.pops).length;
-          console.log(leftoverSeats);
+          let leftoverSeats = state.repCount - Object.keys(state.pops).length;
           for (i=0; i<leftoverSeats; i++){
             result = updateResult(result, state.pops, i)
           }
@@ -629,8 +659,18 @@
         }
 
         // ------ main page controller and helpers -- //
+
+        function showLoadingScreen(){
+          // loading screen isn't working, I am not sure why?
+          $('body').append('<div id="loading" >Calculating...</div>');
+        }
+
+        function hideLoadingScreen(){
+          $('#loading').remove();
+        }
+
         function addUndoIfAppropriate(){
-          if (state.previouspops) {
+          if (state.undoAction) {
             $('#undo').css('display', 'block');
           }
           else {
@@ -639,15 +679,19 @@
         }
 
         function updateState(k, v){
-          state['previous' + k] = copyObject(state[k]);
+          undoAction = {}
+          undoAction[k] = state[k];
+          state['undoAction'] = undoAction;
           state[k] = v;
         }
 
         function update(){
+          showLoadingScreen();
           calculateApportionment();
-          render();
+          renderTable();
           attachTableHandlers();
           addUndoIfAppropriate();
+          hideLoadingScreen();
         }
 
         // ------ initial render -------- //
@@ -657,10 +701,10 @@
         calculateApportionment();
         let apportionment2020 = state.apportionment;
         state.apportionment2020 = apportionment2020;
-        state.previouspops = undefined;  // no undo button at first
+        state.undoAction = undefined;  // no undo button at first
 
         // initial render
-        render();
+        renderTable();
         attachButtonHandlers();
         attachTableHandlers();
       });
