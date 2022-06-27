@@ -55,9 +55,9 @@
           font-size: 18px;
       }
 
-      #add-row{
-          float: right;
-      }
+      /* #add-row{ */
+      /*     float: right; */
+      /* } */
       #undo{
           float: right;
       }
@@ -126,11 +126,16 @@
     <br>
 
     <div class="table-edit-buttons">
-      <button id="2020-reset">Reset table to 2020 census results</button>
-      <button id="2010-reset">Reset table to 2010 census results</button>
+
       <button id="undo" style="display:none">Undo</button>
       <button id="add-row">Add state</button>
       <button id="change-total-seats">Change Total Seats</button>
+
+    </div><div class="table-edit-buttons">
+      <button id="2020-reset">Reset table to 2020 census results</button>
+      <button id="2010-reset">Reset table to 2010 census results</button>
+      <button id="2000-reset">Reset table to 2000 census results</button>
+      <button id="1990-reset">Reset table to 1990 census results</button>
     </div>
 
     <br>
@@ -153,260 +158,307 @@
 
     <script>
       $(document).ready(function(){
+        var census = [{'1990 Population': '29839250',
+                       '2000 Population': '33930798',
+                       '2010 Population': '37,341,989',
+                       '2020 Population': '39,576,757',
+                       'Rank': 1,
+                       'State': 'California'},
+                      {'1990 Population': '17059805',
+                       '2000 Population': '20903994',
+                       '2010 Population': '25,268,418',
+                       '2020 Population': '29,183,290',
+                       'Rank': 2,
+                       'State': 'Texas'},
+                      {'1990 Population': '13003362',
+                       '2000 Population': '16028890',
+                       '2010 Population': '18,900,773',
+                       '2020 Population': '21,570,527',
+                       'Rank': 3,
+                       'State': 'Florida'},
+                      {'1990 Population': '18044505',
+                       '2000 Population': '19004973',
+                       '2010 Population': '19,421,055',
+                       '2020 Population': '20,215,751',
+                       'Rank': 4,
+                       'State': 'New York'},
+                      {'1990 Population': '11924710',
+                       '2000 Population': '12300670',
+                       '2010 Population': '12,734,905',
+                       '2020 Population': '13,011,844',
+                       'Rank': 5,
+                       'State': 'Pennsylvania'},
+                      {'1990 Population': '11466682',
+                       '2000 Population': '12439042',
+                       '2010 Population': '12,864,380',
+                       '2020 Population': '12,822,739',
+                       'Rank': 6,
+                       'State': 'Illinois'},
+                      {'1990 Population': '10887325',
+                       '2000 Population': '11374540',
+                       '2010 Population': '11,568,495',
+                       '2020 Population': '11,808,848',
+                       'Rank': 7,
+                       'State': 'Ohio'},
+                      {'1990 Population': '6508419',
+                       '2000 Population': '8206975',
+                       '2010 Population': '9,727,566',
+                       '2020 Population': '10,725,274',
+                       'Rank': 8,
+                       'State': 'Georgia'},
+                      {'1990 Population': '6657630',
+                       '2000 Population': '8067673',
+                       '2010 Population': '9,565,781',
+                       '2020 Population': '10,453,948',
+                       'Rank': 9,
+                       'State': 'North Carolina'},
+                      {'1990 Population': '9328784',
+                       '2000 Population': '9955829',
+                       '2010 Population': '9,911,626',
+                       '2020 Population': '10,084,442',
+                       'Rank': 10,
+                       'State': 'Michigan'},
+                      {'1990 Population': '7748634',
+                       '2000 Population': '8424354',
+                       '2010 Population': '8,807,501',
+                       '2020 Population': '9,294,493',
+                       'Rank': 11,
+                       'State': 'New Jersey'},
+                      {'1990 Population': '6216568',
+                       '2000 Population': '7100702',
+                       '2010 Population': '8,037,736',
+                       '2020 Population': '8,654,542',
+                       'Rank': 12,
+                       'State': 'Virginia'},
+                      {'1990 Population': '4887941',
+                       '2000 Population': '5908684',
+                       '2010 Population': '6,753,369',
+                       '2020 Population': '7,715,946',
+                       'Rank': 13,
+                       'State': 'Washington'},
+                      {'1990 Population': '3677985',
+                       '2000 Population': '5140683',
+                       '2010 Population': '6,412,700',
+                       '2020 Population': '7,158,923',
+                       'Rank': 14,
+                       'State': 'Arizona'},
+                      {'1990 Population': '6029051',
+                       '2000 Population': '6355568',
+                       '2010 Population': '6,559,644',
+                       '2020 Population': '7,033,469',
+                       'Rank': 15,
+                       'State': 'Massachusetts'},
+                      {'1990 Population': '4896641',
+                       '2000 Population': '5700037',
+                       '2010 Population': '6,375,431',
+                       '2020 Population': '6,916,897',
+                       'Rank': 16,
+                       'State': 'Tennessee'},
+                      {'1990 Population': '5564228',
+                       '2000 Population': '6090782',
+                       '2010 Population': '6,501,582',
+                       '2020 Population': '6,790,280',
+                       'Rank': 17,
+                       'State': 'Indiana'},
+                      {'1990 Population': '4798622',
+                       '2000 Population': '5307886',
+                       '2010 Population': '5,789,929',
+                       '2020 Population': '6,185,278',
+                       'Rank': 18,
+                       'State': 'Maryland'},
+                      {'1990 Population': '5137804',
+                       '2000 Population': '5606260',
+                       '2010 Population': '6,011,478',
+                       '2020 Population': '6,160,281',
+                       'Rank': 19,
+                       'State': 'Missouri'},
+                      {'1990 Population': '4906745',
+                       '2000 Population': '5371210',
+                       '2010 Population': '5,698,230',
+                       '2020 Population': '5,897,473',
+                       'Rank': 20,
+                       'State': 'Wisconsin'},
+                      {'1990 Population': '3307912',
+                       '2000 Population': '4311882',
+                       '2010 Population': '5,044,930',
+                       '2020 Population': '5,782,171',
+                       'Rank': 21,
+                       'State': 'Colorado'},
+                      {'1990 Population': '4387029',
+                       '2000 Population': '4925670',
+                       '2010 Population': '5,314,879',
+                       '2020 Population': '5,709,752',
+                       'Rank': 22,
+                       'State': 'Minnesota'},
+                      {'1990 Population': '3505707',
+                       '2000 Population': '4025061',
+                       '2010 Population': '4,645,975',
+                       '2020 Population': '5,124,712',
+                       'Rank': 23,
+                       'State': 'South Carolina'},
+                      {'1990 Population': '4062608',
+                       '2000 Population': '4461130',
+                       '2010 Population': '4,802,982',
+                       '2020 Population': '5,030,053',
+                       'Rank': 24,
+                       'State': 'Alabama'},
+                      {'1990 Population': '4238216',
+                       '2000 Population': '4480271',
+                       '2010 Population': '4,553,962',
+                       '2020 Population': '4,661,468',
+                       'Rank': 25,
+                       'State': 'Louisiana'},
+                      {'1990 Population': '3698969',
+                       '2000 Population': '4049431',
+                       '2010 Population': '4,350,606',
+                       '2020 Population': '4,509,342',
+                       'Rank': 26,
+                       'State': 'Kentucky'},
+                      {'1990 Population': '2853733',
+                       '2000 Population': '3428543',
+                       '2010 Population': '3,848,606',
+                       '2020 Population': '4,241,500',
+                       'Rank': 27,
+                       'State': 'Oregon'},
+                      {'1990 Population': '3157604',
+                       '2000 Population': '3458819',
+                       '2010 Population': '3,764,882',
+                       '2020 Population': '3,963,516',
+                       'Rank': 28,
+                       'State': 'Oklahoma'},
+                      {'1990 Population': '3295669',
+                       '2000 Population': '3409535',
+                       '2010 Population': '3,581,628',
+                       '2020 Population': '3,608,298',
+                       'Rank': 29,
+                       'State': 'Connecticut'},
+                      {'1990 Population': '1727784',
+                       '2000 Population': '2236714',
+                       '2010 Population': '2,770,765',
+                       '2020 Population': '3,275,252',
+                       'Rank': 30,
+                       'State': 'Utah'},
+                      {'1990 Population': '2787424',
+                       '2000 Population': '2931923',
+                       '2010 Population': '3,053,787',
+                       '2020 Population': '3,192,406',
+                       'Rank': 31,
+                       'State': 'Iowa'},
+                      {'1990 Population': '1206152',
+                       '2000 Population': '2002032',
+                       '2010 Population': '2,709,432',
+                       '2020 Population': '3,108,462',
+                       'Rank': 32,
+                       'State': 'Nevada'},
+                      {'1990 Population': '2362239',
+                       '2000 Population': '2679733',
+                       '2010 Population': '2,926,229',
+                       '2020 Population': '3,013,756',
+                       'Rank': 33,
+                       'State': 'Arkansas'},
+                      {'1990 Population': '2586443',
+                       '2000 Population': '2852927',
+                       '2010 Population': '2,978,240',
+                       '2020 Population': '2,963,914',
+                       'Rank': 34,
+                       'State': 'Mississippi'},
+                      {'1990 Population': '2485600',
+                       '2000 Population': '2693824',
+                       '2010 Population': '2,863,813',
+                       '2020 Population': '2,940,865',
+                       'Rank': 35,
+                       'State': 'Kansas'},
+                      {'1990 Population': '1521779',
+                       '2000 Population': '1823821',
+                       '2010 Population': '2,067,273',
+                       '2020 Population': '2,120,220',
+                       'Rank': 36,
+                       'State': 'New Mexico'},
+                      {'1990 Population': '1584617',
+                       '2000 Population': '1715369',
+                       '2010 Population': '1,831,825',
+                       '2020 Population': '1,963,333',
+                       'Rank': 37,
+                       'State': 'Nebraska'},
+                      {'1990 Population': '1011986',
+                       '2000 Population': '1297274',
+                       '2010 Population': '1,573,499',
+                       '2020 Population': '1,841,377',
+                       'Rank': 38,
+                       'State': 'Idaho'},
+                      {'1990 Population': '1801625',
+                       '2000 Population': '1813077',
+                       '2010 Population': '1,859,815',
+                       '2020 Population': '1,795,045',
+                       'Rank': 39,
+                       'State': 'West Virginia'},
+                      {'1990 Population': '1115274',
+                       '2000 Population': '1216642',
+                       '2010 Population': '1,366,862',
+                       '2020 Population': '1,460,137',
+                       'Rank': 40,
+                       'State': 'Hawaii'},
+                      {'1990 Population': '1113915',
+                       '2000 Population': '1238415',
+                       '2010 Population': '1,321,445',
+                       '2020 Population': '1,379,089',
+                       'Rank': 41,
+                       'State': 'New Hampshire'},
+                      {'1990 Population': '1233223',
+                       '2000 Population': '1277731',
+                       '2010 Population': '1,333,074',
+                       '2020 Population': '1,363,582',
+                       'Rank': 42,
+                       'State': 'Maine'},
+                      {'1990 Population': '1005984',
+                       '2000 Population': '1049662',
+                       '2010 Population': '1,055,247',
+                       '2020 Population': '1,098,163',
+                       'Rank': 43,
+                       'State': 'Rhode Island'},
+                      {'1990 Population': '803655',
+                       '2000 Population': '905316',
+                       '2010 Population': '994,416',
+                       '2020 Population': '1,085,407',
+                       'Rank': 44,
+                       'State': 'Montana'},
+                      {'1990 Population': '668696',
+                       '2000 Population': '785068',
+                       '2010 Population': '900,877',
+                       '2020 Population': '990,837',
+                       'Rank': 45,
+                       'State': 'Delaware'},
+                      {'1990 Population': '699999',
+                       '2000 Population': '756874',
+                       '2010 Population': '819,761',
+                       '2020 Population': '887,770',
+                       'Rank': 46,
+                       'State': 'South Dakota'},
+                      {'1990 Population': '641364',
+                       '2000 Population': '643756',
+                       '2010 Population': '675,905',
+                       '2020 Population': '779,702',
+                       'Rank': 47,
+                       'State': 'North Dakota'},
+                      {'1990 Population': '551947',
+                       '2000 Population': '628933',
+                       '2010 Population': '721,523',
+                       '2020 Population': '736,081',
+                       'Rank': 48,
+                       'State': 'Alaska'},
+                      {'1990 Population': '564964',
+                       '2000 Population': '609890',
+                       '2010 Population': '630,337',
+                       '2020 Population': '643,503',
+                       'Rank': 49,
+                       'State': 'Vermont'},
+                      {'1990 Population': '455975',
+                       '2000 Population': '495304',
+                       '2010 Population': '568,300',
+                       '2020 Population': '577,719',
+                       'Rank': 50,
+                       'State': 'Wyoming'}]
 
-        // ---------- data ------------ //
-        // pulled from wikipedia
-        var census = [{
-	  "Rank": 1,
-	  "State": "California",
-	  "2010 Population": "37,341,989",
-	  "2020 Population": "39,576,757"
-        }, {
-	  "Rank": 2,
-	  "State": "Texas",
-	  "2010 Population": "25,268,418",
-	  "2020 Population": "29,183,290"
-        }, {
-	  "Rank": 3,
-	  "State": "Florida",
-	  "2010 Population": "18,900,773",
-	  "2020 Population": "21,570,527"
-        }, {
-	  "Rank": 4,
-	  "State": "New York",
-	  "2010 Population": "19,421,055",
-	  "2020 Population": "20,215,751"
-        }, {
-	  "Rank": 5,
-	  "State": "Pennsylvania",
-	  "2010 Population": "12,734,905",
-	  "2020 Population": "13,011,844"
-        }, {
-	  "Rank": 6,
-	  "State": "Illinois",
-	  "2010 Population": "12,864,380",
-	  "2020 Population": "12,822,739"
-        }, {
-	  "Rank": 7,
-	  "State": "Ohio",
-	  "2010 Population": "11,568,495",
-	  "2020 Population": "11,808,848"
-        }, {
-	  "Rank": 8,
-	  "State": "Georgia",
-	  "2010 Population": "9,727,566",
-	  "2020 Population": "10,725,274"
-        }, {
-	  "Rank": 9,
-	  "State": "North Carolina",
-	  "2010 Population": "9,565,781",
-	  "2020 Population": "10,453,948"
-        }, {
-	  "Rank": 10,
-	  "State": "Michigan",
-	  "2010 Population": "9,911,626",
-	  "2020 Population": "10,084,442"
-        }, {
-	  "Rank": 11,
-	  "State": "New Jersey",
-	  "2010 Population": "8,807,501",
-	  "2020 Population": "9,294,493"
-        }, {
-	  "Rank": 12,
-	  "State": "Virginia",
-	  "2010 Population": "8,037,736",
-	  "2020 Population": "8,654,542"
-        }, {
-	  "Rank": 13,
-	  "State": "Washington",
-	  "2010 Population": "6,753,369",
-	  "2020 Population": "7,715,946"
-        }, {
-	  "Rank": 14,
-	  "State": "Arizona",
-	  "2010 Population": "6,412,700",
-	  "2020 Population": "7,158,923"
-        }, {
-	  "Rank": 15,
-	  "State": "Massachusetts",
-	  "2010 Population": "6,559,644",
-	  "2020 Population": "7,033,469"
-        }, {
-	  "Rank": 16,
-	  "State": "Tennessee",
-	  "2010 Population": "6,375,431",
-	  "2020 Population": "6,916,897"
-        }, {
-	  "Rank": 17,
-	  "State": "Indiana",
-	  "2010 Population": "6,501,582",
-	  "2020 Population": "6,790,280"
-        }, {
-	  "Rank": 18,
-	  "State": "Maryland",
-	  "2010 Population": "5,789,929",
-	  "2020 Population": "6,185,278"
-        }, {
-	  "Rank": 19,
-	  "State": "Missouri",
-	  "2010 Population": "6,011,478",
-	  "2020 Population": "6,160,281"
-        }, {
-	  "Rank": 20,
-	  "State": "Wisconsin",
-	  "2010 Population": "5,698,230",
-	  "2020 Population": "5,897,473"
-        }, {
-	  "Rank": 21,
-	  "State": "Colorado",
-	  "2010 Population": "5,044,930",
-	  "2020 Population": "5,782,171"
-        }, {
-	  "Rank": 22,
-	  "State": "Minnesota",
-	  "2010 Population": "5,314,879",
-	  "2020 Population": "5,709,752"
-        }, {
-	  "Rank": 23,
-	  "State": "South Carolina",
-	  "2010 Population": "4,645,975",
-	  "2020 Population": "5,124,712"
-        }, {
-	  "Rank": 24,
-	  "State": "Alabama",
-	  "2010 Population": "4,802,982",
-	  "2020 Population": "5,030,053"
-        }, {
-	  "Rank": 25,
-	  "State": "Louisiana",
-	  "2010 Population": "4,553,962",
-	  "2020 Population": "4,661,468"
-        }, {
-	  "Rank": 26,
-	  "State": "Kentucky",
-	  "2010 Population": "4,350,606",
-	  "2020 Population": "4,509,342"
-        }, {
-	  "Rank": 27,
-	  "State": "Oregon",
-	  "2010 Population": "3,848,606",
-	  "2020 Population": "4,241,500"
-        }, {
-	  "Rank": 28,
-	  "State": "Oklahoma",
-	  "2010 Population": "3,764,882",
-	  "2020 Population": "3,963,516"
-        }, {
-	  "Rank": 29,
-	  "State": "Connecticut",
-	  "2010 Population": "3,581,628",
-	  "2020 Population": "3,608,298"
-        }, {
-	  "Rank": 30,
-	  "State": "Utah",
-	  "2010 Population": "2,770,765",
-	  "2020 Population": "3,275,252"
-        }, {
-	  "Rank": 31,
-	  "State": "Iowa",
-	  "2010 Population": "3,053,787",
-	  "2020 Population": "3,192,406"
-        }, {
-	  "Rank": 32,
-	  "State": "Nevada",
-	  "2010 Population": "2,709,432",
-	  "2020 Population": "3,108,462"
-        }, {
-	  "Rank": 33,
-	  "State": "Arkansas",
-	  "2010 Population": "2,926,229",
-	  "2020 Population": "3,013,756"
-        }, {
-	  "Rank": 34,
-	  "State": "Mississippi",
-	  "2010 Population": "2,978,240",
-	  "2020 Population": "2,963,914"
-        }, {
-	  "Rank": 35,
-	  "State": "Kansas",
-	  "2010 Population": "2,863,813",
-	  "2020 Population": "2,940,865"
-        }, {
-	  "Rank": 36,
-	  "State": "New Mexico",
-	  "2010 Population": "2,067,273",
-	  "2020 Population": "2,120,220"
-        }, {
-	  "Rank": 37,
-	  "State": "Nebraska",
-	  "2010 Population": "1,831,825",
-	  "2020 Population": "1,963,333"
-        }, {
-	  "Rank": 38,
-	  "State": "Idaho",
-	  "2010 Population": "1,573,499",
-	  "2020 Population": "1,841,377"
-        }, {
-	  "Rank": 39,
-	  "State": "West Virginia",
-	  "2010 Population": "1,859,815",
-	  "2020 Population": "1,795,045"
-        }, {
-	  "Rank": 40,
-	  "State": "Hawaii",
-	  "2010 Population": "1,366,862",
-	  "2020 Population": "1,460,137"
-        }, {
-	  "Rank": 41,
-	  "State": "New Hampshire",
-	  "2010 Population": "1,321,445",
-	  "2020 Population": "1,379,089"
-        }, {
-	  "Rank": 42,
-	  "State": "Maine",
-	  "2010 Population": "1,333,074",
-	  "2020 Population": "1,363,582"
-        }, {
-	  "Rank": 43,
-	  "State": "Rhode Island",
-	  "2010 Population": "1,055,247",
-	  "2020 Population": "1,098,163"
-        }, {
-	  "Rank": 44,
-	  "State": "Montana",
-	  "2010 Population": "994,416",
-	  "2020 Population": "1,085,407"
-        }, {
-	  "Rank": 45,
-	  "State": "Delaware",
-	  "2010 Population": "900,877",
-	  "2020 Population": "990,837"
-        }, {
-	  "Rank": 46,
-	  "State": "South Dakota",
-	  "2010 Population": "819,761",
-	  "2020 Population": "887,770"
-        }, {
-	  "Rank": 47,
-	  "State": "North Dakota",
-	  "2010 Population": "675,905",
-	  "2020 Population": "779,702"
-        }, {
-	  "Rank": 48,
-	  "State": "Alaska",
-	  "2010 Population": "721,523",
-	  "2020 Population": "736,081"
-        }, {
-	  "Rank": 49,
-	  "State": "Vermont",
-	  "2010 Population": "630,337",
-	  "2020 Population": "643,503"
-        }, {
-	  "Rank": 50,
-	  "State": "Wyoming",
-	  "2010 Population": "568,300",
-	  "2020 Population": "577,719"
-        }]
 
         // ---- end data ---- //
 
@@ -574,6 +626,16 @@
 
           $('#2010-reset').on('click', function(){
             fillPopsInState('2010 Population');
+            update();
+          });
+
+          $('#2000-reset').on('click', function(){
+            fillPopsInState('2000 Population');
+            update();
+          });
+
+          $('#1990-reset').on('click', function(){
+            fillPopsInState('1990 Population');
             update();
           });
 
