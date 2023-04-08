@@ -1,0 +1,313 @@
+html *{
+    font-family: "Source Sans Pro", sans-serif;
+}
+/* ~~~~~~~~~ NAVBAR ~~~~~~~~~` */
+.navbar div{
+    width: 100%;
+}
+
+.nav-image-container {
+    width:100%;
+    overflow: hidden;
+}
+.navbar ul{
+    width:100%;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333333;
+}
+
+.navbar h2{
+    list-style-type: none;
+    margin: 0;
+    overflow: hidden;
+    background-color: #333333;
+    color: white;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+
+}
+
+.navbar li {
+    width: auto;
+    float: left;
+}
+
+.navbar li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    text-decoration: none;
+}
+
+.navbar li a:hover {
+    background-color: #111111;
+}
+
+.navbar-container{
+    top: 2px;
+}
+
+.navbar hr{
+    border:         none;
+    border-left:    1px solid hsla(200, 10%, 50%,100);
+    height:         44px;
+    width:          1px;
+}
+
+
+/* home page */
+
+.home-side-panel {
+    width:33%;
+    height:100%;
+    margin-right:10px;
+    float:left;
+}
+
+.nav-image {
+    height:194px;
+    width: auto;
+    overflow: hidden;
+}
+
+.side-panel-image {
+    margin-top: 20%;
+    margin-left: 20%;
+    margin-right 20%;
+    height: 200px;
+    width:400px;
+}
+
+.home-main {
+    width:60%;
+    height:100%;
+    margin-right:10px;
+    float:left;
+}
+
+@media screen and (max-width: 800px) {
+    .home-main {
+	float: none;
+	margin-right:0;
+	width:auto;
+	border:0;
+	border-bottom:2px solid #000;
+    }
+}
+
+#coursel-container {
+    text-align: center;
+}
+
+#project-carousel {
+    display: inline-block;
+    width: 100%;
+    height: 1000px;
+}
+
+#carousel-image-container {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    height: 400px;
+}
+#carousel-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: auto;
+    height: 400px;
+    z-index:1000;
+}
+
+#carousel-link{
+    width: 100%;
+    height:auto;
+
+}
+
+/* util for blog */
+.blog-title {
+    font-size: 24;
+    margin-top: 5px;
+    margin-left: 31px;
+    margin-bottom: 31px;
+    text-align: center;
+}
+
+.blog-entry p{
+    font-size: 18;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+.blog-entry ul{
+    font-size: 18;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.blog-entry h3{
+    text-align: center
+}
+.blog-entry h2{
+    text-align: center
+}
+
+.full-width div{
+    width:100%;
+    top: 100px;
+}
+
+/* --- project page --- */
+
+.project-preview img{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    height: 400px
+}
+
+.inline-image img {
+    border: 4px #333333 solid;
+    border-radius: 5px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80%;
+    height:auto;
+}
+
+.inline-image-vertical div{
+    display: inline-block;
+}
+
+.inline-image-vertical img {
+    border: 4px #333333 solid;
+    border-radius: 5px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    height: 80%px;
+    width:auto;
+}
+
+
+/* ================================== */
+
+.projects-container div{
+    display:inline-block;
+    margin: auto;
+    text-align: center;
+}
+
+.projects-page {
+    text-align: center;
+    padding-top:30px;
+    padding-bottom:100px;
+}
+
+.projects-preview-image {
+    margin: 5px auto;
+    border: 2px #333333 solid;
+    border-radius: 2px;
+    width: 300px;
+    height: 300px;
+    object-fit: cover;
+    transition: filter .2s ease-in-out;
+    -webkit-filter: grayscale(0%); /* Ch 23+, Saf 6.0+, BB 10.0+ */
+    filter: grayscale(0%); /* FF 35+ */
+
+}
+.projects-preview-image:hover {
+    -webkit-filter: grayscale(50%); /* Ch 23+, Saf 6.0+, BB 10.0+ */
+    filter: grayscale(50%); /* FF 35+ */
+}
+
+.projects-container p {
+    text-align:center;
+}
+
+/* --------------------------------- */
+
+.about-me-picture img{
+    border-radius: 5px;
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    margin-right: 15px;
+    border: solid 2px #333333;
+    float: left;
+    margin-left: 4%;
+}
+
+
+.slideshow {
+    cursor: pointer;
+}
+
+/* --------------------- modal ----------------- */
+#modal-image{
+    object-fit: cover;
+    border: 10px #333333 solid;
+    border-radius: 5px;
+    margin: auto;
+    overflow: hidden;
+    max-width: 95%;
+    /* max-height: 550px; */
+}
+#close-modal{
+    border-radius: 5px;
+    background-color: #333333;
+    width: 22px;
+    position: absolute;
+    top: 0%;
+    right: 50%;
+    color: white;
+
+}
+.modal {
+    text-align: center;
+    overflow: hidden;
+    top: 10%;
+    height: 80%
+    display: none;
+    position: fixed;
+    z-index: 10;
+}
+
+@media screen and (max-width: 500px){
+    .navbar-container li {
+        float: left;
+        width: 100%;
+        border: 1px #444444 solid;
+    }
+
+    .navbar-title{
+        display: none;
+    }
+}
+
+/* close-btn { */
+/*     float: right; */
+/*     color: lightgray; */
+/*     font-size: 24px; */
+/*     font-weight: bold; */
+/* } */
+/* .close-btn:hover { */
+/*     color: darkgray; */
+/* } */
+/* @-webkit-keyframes animatetop { */
+/*     from {top:-300px; opacity:0} */
+/*     to {top:0; opacity:1} */
+/* } */
+/* @keyframes animatetop { */
+/*     from {top:-300px; opacity:0} */
+/*     to {top:0; opacity:1} */
+/* } */
