@@ -11,117 +11,29 @@
     </title>
   </head>
   <body>
-    <style>
-      body {
-          font-size: 18px;
-      }
-      /* results table */
-      .main-table {
-          margin-left: auto;
-          margin-right: auto;
-          border-collapse: collapse;
-          width: 90%;
-          font-family: sans-serif;
-          overflow-x: scroll;
-          font-size: 18px;
-      }
-      .main-table thead tr {
-          background-color: #333333;
-          color: #ffffff;
-          text-align: left;
-      }
-      .main-table th,
-      .main-table td {
-          padding: 12px 15px;
-      }
-      .main-table tbody tr {
-          border-bottom: 1px solid #dddddd;
-      }
+    <div class="navbar">
+      <ul>
+        <li class="navbar-title"><img class="nav-image" src="logo.png"></li>
+        <div class="navbar-container">
+          <li><a href="/" id="about" class="navbarlink">Calculator</a></li>
+          <li><a href="/about.html" id="about" class="navbarlink">History</a></li>
 
-      .main-table tbody tr:nth-of-type(even) {
-          background-color: #f3f3f3;
-      }
-
-      .main-table tbody tr.active-row {
-          font-weight: bold;
-          color: #009879;
-      }
-
-      .popDataEdit:hover {
-          cursor: pointer;
-      }
-
-      .table-edit-buttons button {
-          background-color: #333333;
-          border: 1px solid n;
-          color: white;
-          padding: 10px 20px;
-          cursor: pointer;
-          float: left;
-          font-size: 18px;
-      }
-
-      /* #add-row{ */
-      /*     float: right; */
-      /* } */
-      #undo{
-          float: right;
-      }
-
-      /* buttons */
-      .table-edit-buttons button:not(:last-child) {
-          border-right: none;
-      }
-
-      .table-edit-buttons{
-          padding-bottom:5px;
-          white-space:normal;
-          width: 90%;
-          content: "";
-          display: block;
-          margin: auto;
-          float: left;
-          margin-left: 5%;
-      }
-
-      .table-edit-buttons button:hover {
-          background-color: #222222;
-      }
-
-      .edit-icon {
-          padding:10px;
-          display: inline-block;
-      }
-      .edit-icon:hover {
-          cursor: pointer;
-      }
-
-      #loading{
-          position: fixed;
-          height: 100%;
-          width: 100%;
-          overflow: hidden;
-          top: 0;
-          left: 0;
-          text-align: center;
-          background: gray;
-          opacity: .9;
-          font-size: 35px;
-          line-height: 10;
-          display: none;
-      }
-
-
-    </style>
+	  <li><a href="/poetry.html" class="navbarlink">Poetry Corner</a></li>
+          <li><a href="/riddle.html" class="navbarlink">Monthly Riddle Contest</a></li>
+	  <li><a href="/recipes.html" id="about" class="navbarlink">Recipes</a></li>
+	  <li><a href="/connect.html" id="about" class="navbarlink">
+              Connect with Us
+          </a></li>
+	  <li><a href="/blog.html" id="about" class="navbarlink">The Apportionistas Blog</a></li>
+        </div>
+      </ul>
+    </div>
     <br>
     <div class="blog-entry">
       <h1 style="text-align: center">Congressional Apportionment Calculator</h1>
       <p>A simple, interactive implementation of <a target="_blank" href="https://en.wikipedia.org/wiki/United_States_congressional_apportionment#The_method_of_equal_proportions">the algorithm used for congressional apportionment</a>.
       <p>
         The table below is fully editable. Add or remove states, explore previous census results, and/or change the number of seats to apportion. Populations for existing states are also editable, and states can be deleted.
-      </p>
-      <p>
-        Code is open source and can be found <a href="https://github.com/thiscoldhouse/apportionment-calculator">here</a>. For bugs or feature requests, file an <a href="https://github.com/thiscoldhouse/apportionment-calculator/issues">issue</a>.
       </p>
     </div>
     <br>

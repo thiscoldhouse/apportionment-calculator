@@ -1,6 +1,110 @@
-html *{
+`html *{
     font-family: "Source Sans Pro", sans-serif;
 }
+
+/* ******* from index.html ******  */
+
+body {
+    font-size: 18px;
+    margin: 0;
+}
+/* results table */
+.main-table {
+    margin-left: auto;
+    margin-right: auto;
+    border-collapse: collapse;
+    width: 90%;
+    font-family: sans-serif;
+    overflow-x: scroll;
+    font-size: 18px;
+}
+.main-table thead tr {
+    background-color: #333333;
+    color: #ffffff;
+    text-align: left;
+}
+.main-table th,
+.main-table td {
+    padding: 12px 15px;
+}
+.main-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.main-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.main-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+
+.popDataEdit:hover {
+    cursor: pointer;
+}
+
+.table-edit-buttons button {
+    background-color: #333333;
+    border: 1px solid n;
+    color: white;
+    padding: 10px 20px;
+    cursor: pointer;
+    float: left;
+    font-size: 18px;
+}
+
+/* #add-row{ */
+/*     float: right; */
+/* } */
+#undo{
+    float: right;
+}
+
+/* buttons */
+.table-edit-buttons button:not(:last-child) {
+    border-right: none;
+}
+
+.table-edit-buttons{
+    padding-bottom:5px;
+    white-space:normal;
+    width: 90%;
+    content: "";
+    display: block;
+    margin: auto;
+    float: left;
+    margin-left: 5%;
+}
+
+.table-edit-buttons button:hover {
+    background-color: #222222;
+}
+
+.edit-icon {
+    padding:10px;
+    display: inline-block;
+}
+.edit-icon:hover {
+    cursor: pointer;
+}
+
+#loading{
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+    text-align: center;
+    background: gray;
+    opacity: .9;
+    font-size: 35px;
+    line-height: 10;
+    display: none;
+}
+
+
 /* ~~~~~~~~~ NAVBAR ~~~~~~~~~` */
 .navbar div{
     width: 100%;
@@ -70,9 +174,11 @@ html *{
 }
 
 .nav-image {
-    height:194px;
-    width: auto;
+    height: 55px;
+    line-height: 55px;
     overflow: hidden;
+    border-radius: 50%;
+    margin-top: 4px;
 }
 
 .side-panel-image {
@@ -141,10 +247,13 @@ html *{
     text-align: center;
 }
 
+.blog-entry {
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
 .blog-entry p{
     font-size: 18;
-    margin-left: 5%;
-    margin-right: 5%;
 }
 .blog-entry ul{
     font-size: 18;
@@ -152,12 +261,12 @@ html *{
     margin-right: 5%;
 }
 
-.blog-entry h3{
-    text-align: center
-}
-.blog-entry h2{
-    text-align: center
-}
+/* .blog-entry h3{ */
+/*     text-align: center */
+/* } */
+/* .blog-entry h2{ */
+/*     text-align: center */
+/* } */
 
 .full-width div{
     width:100%;
@@ -174,13 +283,13 @@ html *{
     height: 400px
 }
 
-.inline-image img {
-    border: 4px #333333 solid;
-    border-radius: 5px;
+.inline-image{
+    border: 2px #333333 solid;
+    border-radius: 10px;
     display: block;
     margin-left: auto;
     margin-right: auto;
-    width: 80%;
+    width: 40%;
     height:auto;
 }
 
